@@ -1,0 +1,249 @@
+\documentclass{scrartcl}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{anyfontsize,csvsimple,ifthen,tikz,xcolor}
+\usetikzlibrary{calc}
+\newif\ifDraftMode\DraftModefalse
+\newif\ifMirroredPage\MirroredPagefalse
+
+% Comment out the following line for the final print.  Disabling draft
+% mode enables overprinting to avoid white margins after cropping the
+% badges and it also hides the black frame around each badge.
+\DraftModetrue
+
+% Uncomment the following line to enable output suitable for the
+% second side of 2-sided printing.
+% \MirroredPagetrue
+
+% You may change the following two values (within reason).  Everything
+% else will be recomputed automatically.
+\newcommand{\BadgeWidth}{9cm}
+\newcommand{\BadgeHeight}{5.9cm}
+
+% Distance between badges.  You probably do not need to change this.
+\newcommand{\BadgeSepX}{0.6cm}
+\newcommand{\BadgeSepY}{0.9cm}
+
+% The amount of overprinting (irrelevant for draft mode)
+\newcommand{\Fudge}{1.5mm}
+
+% Shortening of the crop marks (may be negative)
+\newcommand{\CropMarksSep}{0.5mm}
+
+% The colors for the events markers
+\colorlet{eventA}{blue}
+\colorlet{eventB}{green!60!black}
+\definecolor{eventC}{RGB}{255,100,0}
+\colorlet{eventD}{purple}
+
+% There are 8 badges per page, so we can compute the margins.
+\pgfmathsetlengthmacro{\BadgeMarginTop}{(\paperheight - 4 * \BadgeHeight - 3 * \BadgeSepY) / 2}
+\pgfmathsetlengthmacro{\BadgeMarginLeft}{(\paperwidth - 2 * \BadgeWidth - \BadgeSepX) / 2}
+
+% No overprinting in draft mode.
+\ifDraftMode
+  \renewcommand{\Fudge}{0}
+\fi
+
+% If the number or names of the optional events change, you need to
+% adapt the following command.
+\newcommand{\attendance}[5]{
+  \pgfmathsetlengthmacro{\xshift}{#1 * \BadgeWidth / 4}
+  \begin{scope}[xshift=\xshift]
+    \draw [fill=#2!20,draw=none] (#4, -\Fudge) rectangle (\BadgeWidth / 4 + #5, 0.5);
+    \node [anchor=base] at (\BadgeWidth / 8,0.12) {\textbf{\large{#3}}};
+  \end{scope}
+}
+\newcommand{\attendsEventA}{\attendance{0}{eventA}{A}{-\Fudge}{0}}
+\newcommand{\attendsEventB}{\attendance{1}{eventB}{B}{0}{0}}
+\newcommand{\attendsEventC}{\attendance{2}{eventC}{C}{0}{0}}
+\newcommand{\attendsEventD}{\attendance{3}{eventD}{D}{0}{\Fudge}}
+
+\newcommand{\TryNameSize}[2]{
+  \begin{scope}
+    \node [anchor=mid] (try#1) at (\BadgeWidth / 2, 3.2)
+      {\textbf{\fontsize{#1}{#1}\selectfont{\phantom{\firstname~\lastname}}}};
+    \newdimen\x
+    \pgfextractx{\x}{\pgfpointanchor{try#1}{east}}
+    \pgfmathtruncatemacro{\TooLarge}{\x > \BadgeWidth - 0.2cm}
+    \ifnum \TooLarge=1
+      #2
+    \else
+      \node [anchor=mid] at (\BadgeWidth / 2, 3.2)
+        {\textbf{\fontsize{#1}{#1}\selectfont\firstname~\lastname}};
+    \fi
+  \end{scope}
+}
+
+\newcommand*{\SingleBadge}[1]{
+  \pgfmathsetlengthmacro{\xshift}{
+    mod(#1, 2) * (\BadgeWidth + \BadgeSepX) + \BadgeWidth / 2 + \BadgeMarginLeft}
+  \pgfmathsetlengthmacro{\yshift}{
+    int(#1 / 2) * (\BadgeHeight + \BadgeSepY) + \BadgeHeight / 2 + \BadgeMarginTop}
+  \node [xshift=\xshift,yshift=-\yshift]
+    at (current page.north west) {
+  \begin{tikzpicture}
+    \draw [use as bounding box,draw=none] (0,0) rectangle (\BadgeWidth,\BadgeHeight);
+
+    % If you want to change the layout or content of the badge, this
+    % is the place.
+
+    %% The headline
+    \draw [fill=black!5,draw=none]
+      (-\Fudge, \BadgeHeight - 0.9cm) rectangle (\BadgeWidth + \Fudge, \BadgeHeight + \Fudge);
+
+    \node at (\BadgeWidth / 2, \BadgeHeight - 0.45cm) {
+      \textbf{\Large{ABC 2015}}};
+    \node at (1, \BadgeHeight - 0.45cm) {Logo};
+    \node at (\BadgeWidth - 0.7cm, \BadgeHeight - 0.45cm) {Logo};
+
+    %% The middle part
+    % Try different font sizes for the name to find the maximum
+    % size that fits.
+    \TryNameSize{36}{
+    \TryNameSize{34}{
+    \TryNameSize{32}{
+    \TryNameSize{31}{
+    \TryNameSize{30}{
+    \TryNameSize{29}{
+    \TryNameSize{28}{
+    \TryNameSize{27}{
+    \TryNameSize{26}{
+    \TryNameSize{25}{
+    \TryNameSize{24}{
+    \TryNameSize{23}{
+    \TryNameSize{22}{
+    \TryNameSize{21}{
+    \TryNameSize{20}{
+    \TryNameSize{19}{
+      \node [anchor=mid] at (\BadgeWidth / 2, 3.2)
+        {\textbf{\fontsize{18}{18}\selectfont{\firstname~\lastname}}};
+    }}}}}}}}}}}}}}}}
+
+    \node [anchor=base] at (\BadgeWidth / 2, 2.2) {\Large{\affiliation}};
+
+    %% The bottom line
+    \ifthenelse{\equal{\eventA}{}}{}{\attendsEventA}
+    \ifthenelse{\equal{\eventB}{}}{}{\attendsEventB}
+    \ifthenelse{\equal{\eventC}{}}{}{\attendsEventC}
+    \ifthenelse{\equal{\eventD}{}}{}{\attendsEventD}
+    % Draw a fine gray line above the event markers.
+    \draw [draw=black!30] (-\Fudge, 0.5) -- (\BadgeWidth + \Fudge, 0.5);
+
+    %% A frame
+    % Draw a frame around the badge if in draft mode.
+    \ifDraftMode
+      \draw (0,0) rectangle (\BadgeWidth,\BadgeHeight);
+    \fi
+  \end{tikzpicture}
+  };
+}
+
+% Drawing the crop marks is rather elaborate.
+\pgfmathsetlengthmacro{\VerticalMarkLength}{\BadgeMarginTop - \CropMarksSep}
+\newcommand*{\VerticalMarksHelper}[2]{
+  \draw ($ (current page.#1 west) + (\BadgeMarginLeft, 0) $)
+     -- ($ (current page.#1 west) + (\BadgeMarginLeft, -\VerticalMarkLength * #2) $);
+  \draw ($ (current page.#1 west) + (\BadgeMarginLeft + \BadgeWidth, 0) $)
+     -- ($ (current page.#1 west) + (\BadgeMarginLeft + \BadgeWidth, -\VerticalMarkLength * #2) $);
+  \draw ($ (current page.#1 west) + (\BadgeMarginLeft + \BadgeWidth + \BadgeSepX, 0) $)
+     -- ($ (current page.#1 west) + (\BadgeMarginLeft + \BadgeWidth + \BadgeSepX, -\VerticalMarkLength * #2) $);
+  \draw ($ (current page.#1 west) + (\BadgeMarginLeft + 2 * \BadgeWidth + \BadgeSepX, 0) $)
+     -- ($ (current page.#1 west) + (\BadgeMarginLeft + 2 * \BadgeWidth + \BadgeSepX, -\VerticalMarkLength * #2) $);
+}
+\newcommand{\VerticalMarks}{
+  % top
+  \VerticalMarksHelper{north}{1}
+  % bottom
+  \VerticalMarksHelper{south}{-1}
+  % between the badges
+  \foreach \i in {0,...,2} {
+    \pgfmathsetmacro{\step}{\i * \BadgeHeight + \i * \BadgeSepY}
+    \draw ($ (current page.north west) +
+      (\BadgeMarginLeft, -\BadgeMarginTop - \step - \BadgeHeight - \CropMarksSep) $)
+       -- ($ (current page.north west) +
+      (\BadgeMarginLeft, -\BadgeMarginTop - \step - \BadgeHeight - \BadgeSepY + \CropMarksSep) $);
+    \draw ($ (current page.north west) +
+      (\BadgeMarginLeft + \BadgeWidth, -\BadgeMarginTop - \step - \BadgeHeight - \CropMarksSep) $)
+       -- ($ (current page.north west) +
+      (\BadgeMarginLeft + \BadgeWidth, -\BadgeMarginTop - \step - \BadgeHeight - \BadgeSepY + \CropMarksSep) $);
+    \draw ($ (current page.north west) +
+      (\BadgeMarginLeft + \BadgeWidth + \BadgeSepX, -\BadgeMarginTop - \step - \BadgeHeight - \CropMarksSep) $)
+       -- ($ (current page.north west) +
+      (\BadgeMarginLeft + \BadgeWidth + \BadgeSepX, -\BadgeMarginTop - \step - \BadgeHeight - \BadgeSepY + \CropMarksSep) $);
+    \draw ($ (current page.north west) +
+      (\BadgeMarginLeft + 2 * \BadgeWidth + \BadgeSepX, -\BadgeMarginTop - \step - \BadgeHeight - \CropMarksSep) $)
+       -- ($ (current page.north west) +
+      (\BadgeMarginLeft + 2 * \BadgeWidth + \BadgeSepX, -\BadgeMarginTop - \step - \BadgeHeight - \BadgeSepY + \CropMarksSep) $);
+  }
+}
+\pgfmathsetlengthmacro{\HorizontalMarkLength}{\BadgeMarginLeft - \CropMarksSep}
+\newcommand{\HorizontalMarks}{
+  \foreach \i in {0,...,3} {
+    \pgfmathsetmacro{\step}{\i * \BadgeHeight + \i * \BadgeSepY}
+    % left
+    \draw ($ (current page.north west) + (0, -\BadgeMarginTop - \step) $)
+       -- ($ (current page.north west) + (\HorizontalMarkLength, -\BadgeMarginTop - \step) $);
+    \draw ($ (current page.north west) + (0, -\BadgeMarginTop - \BadgeHeight - \step) $)
+       -- ($ (current page.north west) + (\HorizontalMarkLength, -\BadgeMarginTop - \BadgeHeight - \step) $);
+
+    % middle
+    \draw ($ (current page.north west) + (\BadgeMarginLeft + \BadgeWidth + \CropMarksSep, -\BadgeMarginTop - \step) $)
+       -- ($ (current page.north west) + (\BadgeMarginLeft + \BadgeWidth + \BadgeSepX - \CropMarksSep, -\BadgeMarginTop - \step) $);
+    \draw ($ (current page.north west) + (\BadgeMarginLeft + \BadgeWidth + \CropMarksSep, -\BadgeMarginTop - \BadgeHeight - \step) $)
+       -- ($ (current page.north west) + (\BadgeMarginLeft + \BadgeWidth + \BadgeSepX - \CropMarksSep, -\BadgeMarginTop - \BadgeHeight - \step) $);
+
+    % right
+    \draw ($ (current page.north east) + (0, -\BadgeMarginTop - \step) $)
+       -- ($ (current page.north east) + (-\HorizontalMarkLength, -\BadgeMarginTop - \step) $);
+    \draw ($ (current page.north east) + (0, -\BadgeMarginTop - \BadgeHeight - \step) $)
+       -- ($ (current page.north east) + (-\HorizontalMarkLength, -\BadgeMarginTop - \BadgeHeight - \step) $);
+  }
+}
+
+\newcommand{\CropMarks}{
+  \begin{tikzpicture}[remember picture,overlay,
+    every path/.style={
+        color=black,
+        line width=0.01pt
+    }]
+    \VerticalMarks
+    \HorizontalMarks
+  \end{tikzpicture}
+}
+
+\newcommand{\BadgesPerPage}{8}
+
+\pagestyle{empty}
+\begin{document}
+  \sffamily
+  \def\i{0}
+  % The number of badges already printed on this page plus 1.
+  \def\onthispagesofar{1}
+  \csvreader{participants.csv}{%
+    1=\affiliation,4=\firstname,5=\lastname,
+    6=\eventA,7=\eventB,8=\eventC,9=\eventD}%
+  {
+    \pgfmathtruncatemacro{\j}{mod(\i, 8)}
+
+    \ifnum\j=0\ifnum\i=0\else
+      \newpage
+    \fi\fi
+
+    \ifMirroredPage
+      \pgfmathtruncatemacro{\j}{\j - mod(\i, 2) + mod(\i + 1, 2)}
+    \fi
+
+    \begin{tikzpicture}[remember picture,overlay]
+      \SingleBadge{\j}
+    \end{tikzpicture}
+
+    \ifnum\onthispagesofar=\BadgesPerPage
+      \CropMarks
+    \fi
+
+    \pgfmathtruncatemacro{\i}{\i+1}
+    \pgfmathtruncatemacro{\onthispagesofar}{mod(\onthispagesofar, \BadgesPerPage) + 1}
+  }%
+  \CropMarks
+\end{document}
