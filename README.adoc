@@ -1,5 +1,7 @@
 = badges.tex
 
+image:https://travis-ci.org/Christoph-D/badges.tex.svg?branch=master["Build Status",link="https://travis-ci.org/Christoph-D/badges.tex"]
+
 `badges.tex` generates conference badges (name tags) automatically
 from a csv file.  This saves a lot of work compared to manually typing
 badges.

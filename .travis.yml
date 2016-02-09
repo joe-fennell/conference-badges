@@ -1,0 +1,14 @@
+sudo: required
+dist: trusty
+language: latex
+
+addons:
+  apt:
+    packages:
+      - texlive-latex-base
+      - texlive-latex-recommended
+      - texlive-latex-extra
+      - texlive-fonts-recommended
+      - pgf
+
+script: "pdflatex -halt-on-error -interaction=nonstopmode badges.tex"
