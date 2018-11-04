@@ -17,8 +17,8 @@
 
 % You may change the following two values (within reason).  Everything
 % else will be recomputed automatically.
-\newcommand{\BadgeWidth}{9cm}
-\newcommand{\BadgeHeight}{5.9cm}
+\newcommand{\BadgeWidth}{8.6cm}
+\newcommand{\BadgeHeight}{5.5cm}
 
 
 % Distance between badges.  You probably do not need to change this.
@@ -40,7 +40,7 @@
 % There are 8 badges per page, so we can compute the margins.
 \pgfmathsetlengthmacro{\BadgeMarginTop}{(\paperheight - 4 * \BadgeHeight - 3 * \BadgeSepY) / 2}
 \pgfmathsetlengthmacro{\BadgeMarginLeft}{(\paperwidth - 2 * \BadgeWidth - \BadgeSepX) / 2}
-\pgfmathsetlengthmacro{\LogoHeight}{\BadgeHeight * 0.2}
+\pgfmathsetlengthmacro{\LogoHeight}{\BadgeHeight * 0.25}
 
 % No overprinting in draft mode.
 \ifDraftMode
@@ -59,7 +59,7 @@
 \newcommand{\attendsEventA}{\attendance{0}{eventA}{Tue}{-\Fudge}{0}}
 \newcommand{\attendsEventB}{\attendance{1}{eventB}{Wed}{0}{0}}
 \newcommand{\attendsEventC}{\attendance{2}{eventC}{Thu}{0}{0}}
-\newcommand{\attendsEventD}{\attendance{3}{eventD}{D}{0}{\Fudge}}
+\newcommand{\attendsEventD}{\attendance{3}{eventD}{Speaker}{0}{\Fudge}}
 
 \newcommand{\TryNameSize}[2]{
   \begin{scope}
@@ -94,34 +94,19 @@
     %\draw [fill=black!5,draw=none]
      % (-\Fudge, \BadgeHeight - 0.9cm) rectangle (\BadgeWidth + \Fudge, \BadgeHeight + \Fudge);
 
-    \node at (\BadgeWidth / 4, \BadgeHeight - \LogoHeight){\includegraphics[height=\LogoHeight]{image}};
+    \node at (\BadgeWidth / 4, \BadgeHeight - \LogoHeight){\includegraphics[height=\LogoHeight]{logo_large.png}};
     \node at (1, \BadgeHeight - \LogoHeight) {};
     \node at (\BadgeWidth - \BadgeWidth / 4, \BadgeHeight - \LogoHeight) {\includegraphics[height=\LogoHeight]{uom}};
 
     %% The middle part
     % Try different font sizes for the name to find the maximum
     % size that fits.
-    \TryNameSize{36}{
-    \TryNameSize{34}{
-    \TryNameSize{32}{
-    \TryNameSize{31}{
-    \TryNameSize{30}{
-    \TryNameSize{29}{
-    \TryNameSize{28}{
-    \TryNameSize{27}{
-    \TryNameSize{26}{
-    \TryNameSize{25}{
-    \TryNameSize{24}{
-    \TryNameSize{23}{
-    \TryNameSize{22}{
-    \TryNameSize{21}{
-    \TryNameSize{20}{
-    \TryNameSize{19}{
-      \node [anchor=mid] at (\BadgeWidth / 2, 3.2)
-        {\textbf{\fontsize{18}{18}\selectfont{\firstname~\lastname}}};
-    }}}}}}}}}}}}}}}}
+    
+      \node [anchor=mid] at (\BadgeWidth / 2, \BadgeHeight / 2)
+        {\textbf{\fontsize{22}{22}\selectfont{\firstname~\lastname}}};
+  
 
-    \node [anchor=base] at (\BadgeWidth / 2, 2.2) {\Large{\affiliation}};
+    \node [anchor=base] at (\BadgeWidth / 2, 1.8) {\Large{\affiliation}};
 
     %% The bottom line
     \ifthenelse{\equal{\eventA}{}}{}{\attendsEventA}

@@ -1,9 +1,5 @@
-Affiliation,Form of Address,Title,First Name,Last Name,Event A,Event B,Event C,Event D
-University of Somewhere,Mr.,Dr.,First,Last,1,1,1,1
-University of Somewhere,Mrs.,,A very very very long,name,1,,1,1
-University of Somewhere,Mrs.,,A slightly longer,name,1,,,
-University of Somewhere,Mr.,,First Middle,Last,1,1,,1
-,,,,,,,,
-,,,,,,,,
-,,,,,,,,
-,,,,,,,,
+Affiliation,Form of Address,Title,First Name,Last Name,tue,wed,thu,speaker
+University of Somewhere,Mr.,,First,Last,1,1,1,1
+University of Somewhere,Mrs.,,John,Doe,1,,1,1
+University of Somewhere,Mrs.,,Jane,Doe,1,,,
+University of Somewhere,Mr.,,Jeremy,Two,1,1,,1
