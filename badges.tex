@@ -5,7 +5,7 @@
 \usetikzlibrary{calc}
 \newif\ifDraftMode\DraftModefalse
 \newif\ifMirroredPage\MirroredPagefalse
-
+\usepackage{tgheros}
 % Comment out the following line for the final print.  Disabling draft
 % mode enables overprinting to avoid white margins after cropping the
 % badges and it also hides the black frame around each badge.
@@ -19,6 +19,7 @@
 % else will be recomputed automatically.
 \newcommand{\BadgeWidth}{9cm}
 \newcommand{\BadgeHeight}{5.9cm}
+
 
 % Distance between badges.  You probably do not need to change this.
 \newcommand{\BadgeSepX}{0.6cm}
@@ -39,6 +40,7 @@
 % There are 8 badges per page, so we can compute the margins.
 \pgfmathsetlengthmacro{\BadgeMarginTop}{(\paperheight - 4 * \BadgeHeight - 3 * \BadgeSepY) / 2}
 \pgfmathsetlengthmacro{\BadgeMarginLeft}{(\paperwidth - 2 * \BadgeWidth - \BadgeSepX) / 2}
+\pgfmathsetlengthmacro{\LogoHeight}{\BadgeHeight * 0.2}
 
 % No overprinting in draft mode.
 \ifDraftMode
@@ -54,9 +56,9 @@
     \node [anchor=base] at (\BadgeWidth / 8,0.12) {\textbf{\large{#3}}};
   \end{scope}
 }
-\newcommand{\attendsEventA}{\attendance{0}{eventA}{A}{-\Fudge}{0}}
-\newcommand{\attendsEventB}{\attendance{1}{eventB}{B}{0}{0}}
-\newcommand{\attendsEventC}{\attendance{2}{eventC}{C}{0}{0}}
+\newcommand{\attendsEventA}{\attendance{0}{eventA}{Tue}{-\Fudge}{0}}
+\newcommand{\attendsEventB}{\attendance{1}{eventB}{Wed}{0}{0}}
+\newcommand{\attendsEventC}{\attendance{2}{eventC}{Thu}{0}{0}}
 \newcommand{\attendsEventD}{\attendance{3}{eventD}{D}{0}{\Fudge}}
 
 \newcommand{\TryNameSize}[2]{
@@ -89,13 +91,12 @@
     % is the place.
 
     %% The headline
-    \draw [fill=black!5,draw=none]
-      (-\Fudge, \BadgeHeight - 0.9cm) rectangle (\BadgeWidth + \Fudge, \BadgeHeight + \Fudge);
+    %\draw [fill=black!5,draw=none]
+     % (-\Fudge, \BadgeHeight - 0.9cm) rectangle (\BadgeWidth + \Fudge, \BadgeHeight + \Fudge);
 
-    \node at (\BadgeWidth / 2, \BadgeHeight - 0.45cm) {
-      \textbf{\Large{ABC 2015}}};
-    \node at (1, \BadgeHeight - 0.45cm) {Logo};
-    \node at (\BadgeWidth - 0.7cm, \BadgeHeight - 0.45cm) {Logo};
+    \node at (\BadgeWidth / 4, \BadgeHeight - \LogoHeight){\includegraphics[height=\LogoHeight]{image}};
+    \node at (1, \BadgeHeight - \LogoHeight) {};
+    \node at (\BadgeWidth - \BadgeWidth / 4, \BadgeHeight - \LogoHeight) {\includegraphics[height=\LogoHeight]{uom}};
 
     %% The middle part
     % Try different font sizes for the name to find the maximum
